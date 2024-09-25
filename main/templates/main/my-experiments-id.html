@@ -1,0 +1,131 @@
+<!-- main/templates/main/my-experiments-id.html -->
+{% extends 'base.html' %}
+
+<!-- Title of the page -->
+{% block title %}
+My Experiment {{ experiment.id }}
+{% endblock %}
+
+<!-- Content title -->
+{% block content_title %}
+My Experiment {{ experiment.id }}
+{% endblock %}
+
+<!-- Content description -->
+{% block content_description %}
+Here are the details of your experiment.
+{% endblock %}
+
+{% block content %}
+<!-- Load crispy forms tags -->
+{% load crispy_forms_tags %}
+{% load static %}
+<!-- Load custom CSS files from main app -->
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}" />
+
+<div class="col-md-10">
+  <div class="table-responsive">
+    <table class="table table-experiment-information">
+      <tbody>
+        <!-- Display the experiment ID -->
+        <tr>
+          <td>
+            <strong>Experiment ID</strong>
+          </td>
+          <td class="text">{{ experiment.id }}</td>
+        </tr>
+        <!-- Display the experiment title -->
+        <tr>
+          <td>
+            <strong>Experiment Title</strong>
+          </td>
+          <td class="text">{{ experiment.name }}</a></td>
+        </tr>
+        <!-- Link to the experiment description -->
+        <tr>
+          <td>
+            <strong>Experiment Description</strong>
+          </td>
+          <td class="text"><a href="{% url 'experiments-id' experiment.id %}">Click here</a>
+          </td>
+        </tr>
+        <!-- Display the experiment scheduled date -->
+        <tr>
+          <td>
+            <strong>Experiment Date</strong>
+          </td>
+          <td class="text">{{ my_experiment.experiment_date|date:"N j, Y H:i:s" }}</td>
+        </tr>
+        <!-- Display the report due date -->
+        <tr>
+          <td>
+            <strong>Report Due On</strong>
+          </td>
+          <td class="text">{{ my_experiment.report_due_date|date:"N j, Y H:i:s" }}
+            <!-- Display a warning message if the report is due soon -->
+            {% if context.warning %}
+            <div style="color: red; font-size: 10px;">{{ context.warning_msg }}</div>
+            {% endif %}
+          </td>
+        </tr>
+        <!-- Report submission button  -->
+        <tr>
+          <td>
+            <strong>Submit report </strong>
+          </td>
+          <td class="text">
+            {% if context.report_name %}
+            <div class="file-download pb-1">
+              <a href="{{ my_experiment.report.url }}">{{ context.report_name }}</a>
+
+            </div>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" action="">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <button class="btn btn-primary" type="submit">Submit Report</button>
+            </form>
+          </td>
+        </tr>
+        <!-- Display when report was submitted -->
+        <tr>
+          <td>
+            <strong>Submission Date</strong>
+          </td>
+          <td class="text">{{ my_experiment.submission_date|date:"N j, Y H:i:s" }}</td>
+        </tr>
+        <!-- Link to experiment data -->
+        <tr>
+          <td>
+            <strong>Experiment Data</strong>
+          </td>
+          <td class="text"><a href="{% url 'redirect-to-experiment-data' experiment.id %}">Click here</a></td>
+        </tr>
+        <!-- Link to experiment data analysis -->
+        <tr>
+          <td>
+            <strong>Data Analysis</strong>
+          </td>
+          <td class="text"><a href="{% url 'redirect-to-experiment-data-analysis' experiment.id %}">Click here</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+<!-- Breadcrumbs -->
+{% block breadcrumbs %}
+<!-- link to my-experiments page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'my-experiments' %}">
+    <span>My Experiments</span>
+  </a>
+</li>
+<!-- link to this page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'my-experiments-id' experiment.id %}">
+    <span>{{ experiment.id }}</span>
+  </a>
+</li>
+{% endblock %}

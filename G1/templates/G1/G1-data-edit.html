@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% comment %}
+File location: ...G1/G1-data-add.html
+Description: This template is used to add a new data point for this experiment.
+Author: Rachit Khare
+(c) 2024, RDM4Lab - all rights reserved
+{% endcomment %}
+
+{% block title %}
+RDM4Lab | G1 | Edit Data
+{% endblock %}
+
+{% block content_title %}
+Edit Data
+{% endblock %}
+
+{% block content_description %}
+<p>Here you can edit an existing data point for this experiment.</p>
+<p><a href="{% url 'G1:G1-data' %}">Click here</a> to go back to the 
+    data management page.</p>
+<hr>
+{# load custom tags and static files #}
+{% load crispy_forms_tags %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'G1/css/G1.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Form to add data -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn btn-outline-primary btn-block" type="submit">Update Data</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments' %}">
+        <span>My Experiments</span>
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments-id' 'G1' %}">
+        <span>G1</span>
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'G1:G1-data' %}">
+        <span>Data Management</span>
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'G1:G1-data-edit' id %}">
+        <span>Edit Data Point # {{ id }}</span>
+    </a>
+</li>
+{% endblock %}

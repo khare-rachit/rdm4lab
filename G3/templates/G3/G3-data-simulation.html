@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% comment %}
+File location: ...G3/G3-data-simulation.html
+Description: This template is used to simulate additional data for experiment G3.
+Author: Rachit Khare
+(c) 2024, RDM4Lab - all rights reserved
+{% endcomment %}
+
+{% block title %}
+RDM4Lab | G3 | Simulation
+{% endblock %}
+
+{% block content_title %}
+Simulation
+{% endblock %}
+
+{% block content_description %}
+<p>Here you can simulate additional data for experiment G3.</p>
+<p><a href="{% url 'G3:G3-data' %}">Click here</a> to 
+    go back to data management page for your data.</p>
+<hr>
+{# load custom tags and static files #}
+{% load crispy_forms_tags %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'G3/css/G3.css' %}">
+{% load crispy_forms_tags %}
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn-outline-primary btn-block" type="submit" name="action" value="simulate">Simulate</button>
+        <button class="btn btn-outline-primary btn-block" type="submit" name="action" value="add-data">Add Data</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block breadcrumbs %}
+<!-- link to my-experiments page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments' %}">
+        <span>My Experiments</span>
+    </a>
+</li>
+<!-- link to Experiment main page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments-id' 'G3' %}">
+        <span>G3</span>
+    </a>
+</li>
+<!-- link to this page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'G3:G3-data' %}">
+        <span>Data Management</span>
+    </a>
+</li>
+<!-- link to this page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'G3:G3-data-simulation' %}">
+        <span>Simulation</span>
+    </a>
+</li>
+{% endblock %}

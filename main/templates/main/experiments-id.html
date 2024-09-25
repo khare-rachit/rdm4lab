@@ -1,0 +1,82 @@
+<!-- main/templates/main/experiments-id.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+RDM4Lab {{experiment.id}}
+{% endblock %}
+
+{% block content_title %}
+<!-- Experiment ID -->
+Experiment {{ experiment.id }}
+{% endblock %}
+
+{% block content_description %}
+<!-- Experiment Title -->
+{{ experiment.name }}
+
+{% load static %}
+<!-- Load custom CSS files -->
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}" />
+
+<!-- Load custom template tags -->
+{% load custom_tags %}
+
+<!-- Experiment Description -->
+<!-- Tabs for Theory, Setup, Procedure, and Tasks -->
+<div class="container-fluid tab-container p-0 pb-3">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    {% for item in context %}
+    {% if forloop.first %}
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab_{{ item }}" data-bs-toggle="tab" data-bs-target="#{{ item }}-tab-pane"
+        type="button" role="tab">{{ item }}</button>
+    </li>
+    {% else %}
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab_{{ item }}" data-bs-toggle="tab" data-bs-target="#{{ item }}-tab-pane"
+        type="button" role="tab">{{ item }}</button>
+    </li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Tab Content -->
+<div class="tab-content" id="myTabContent">
+  {% for item in context %}
+  {% if forloop.first %}
+  <div class="tab-pane fade show active" id="{{ item }}-tab-pane" role="tabpanel" tabindex="0">
+    <div class="card card-body">
+      {{ context|dict_key:item|safe }}
+    </div>
+  </div>
+  {% else %}
+  <div class="tab-pane fade show" id="{{ item }}-tab-pane" role="tabpanel" tabindex="0">
+    <div class="card card-body">
+      {{ context|dict_key:item|safe }}
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
+
+<!-- Breadcrumbs -->
+{% block breadcrumbs %}
+<!-- Link to the experiments page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'experiments' %}">
+    <span>Experiments</span>
+  </a>
+</li>
+<!-- Link to the experiment detail page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'experiments-id' experiment.id %}">
+    <span>{{experiment.id}}</span>
+  </a>
+</li>
+{% endblock %}

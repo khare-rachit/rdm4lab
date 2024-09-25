@@ -1,0 +1,33 @@
+/* experiment information table */
+.table-experiment-information a {
+    text-decoration: none;
+    /* remove underline */
+}
+
+.table-experiment-information a:hover {
+    text-decoration: underline;
+    /* add underline on hover */
+}
+
+.tab-container {
+    margin-top: 10px;
+    /* Add margin at the top */
+}
+
+.tab-content {
+    margin: 0;
+    /* Remove margin */
+}
+
+
+.content-header {
+    border-bottom: 0;
+    /* Bottom border */
+    margin-bottom: 0;
+    /* Remove bottom margin */
+}
+
+.file-download {
+    font-size: 14px;
+    /* Font size */
+}

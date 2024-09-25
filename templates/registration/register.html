@@ -1,0 +1,45 @@
+<!-- templates/registration/registration.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+RDM4Lab Register
+{% endblock %}
+
+{% block content_title %}
+<!-- no title -->
+{% endblock %}
+
+{% block content_description %}
+<!-- no description -->
+{% endblock %}
+
+{% block content %}
+<!-- Load crispy forms tags -->
+{% load crispy_forms_tags %}
+<!-- Load custom CSS files -->
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/registration.css' %}" />
+
+<!-- Registration form -->
+<form class="registration-form" method="post">
+  <!-- CSRF token and registration form -->
+  {% csrf_token %} {{ form|crispy }}
+  <!-- link to login page for existing users -->
+  <p>
+    Already have an account? <a href="/login">Login</a>
+  </p>
+  <!-- Registration button -->
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <button class="btn btn btn-outline-primary btn-block" type="submit">Register</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block breadcrumbs %}
+<!-- register breadcrumb -->
+<li class="breadcrumb-item">
+  <a href="{% url 'register' %}">
+    <span>Register</span>
+  </a>
+</li>
+{% endblock %}

@@ -1,0 +1,36 @@
+# Ignore database files
+*.sqlite3
+
+# Ignore local development notes
+DEVNOTES.md
+DEVNOTES.txt
+
+# Ignore static files
+/staticfiles/
+
+# Ignore media files
+/media/
+
+# Ignore virtual environment
+/rdm4lab_venv/
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore log files
+*.log
+
+# Ignore environment variables file
+.env
+
+# Ignore local settings file
+/local_settings.py
+
+/rdm4lab_venv/
+
+*.code-workspace

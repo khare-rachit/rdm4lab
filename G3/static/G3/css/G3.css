@@ -1,0 +1,65 @@
+/* experiment information table */
+.table-experiment-information a {
+    text-decoration: none;
+    /* remove underline */
+}
+
+.table-experiment-information a:hover {
+    text-decoration: underline;
+    /* add underline on hover */
+}
+
+.tab-container {
+    margin-top: 10px;
+    /* Add margin at the top */
+}
+
+.plotly-chart {
+    overflow: auto;
+    /* Add scroll bar */
+    width: 100%;
+    /* Set width */
+    height: 100%;
+    /* Set height */
+    max-width: 400px;
+    /* Set max width */
+    max-height: 250px;
+    /* Set max height */
+}
+
+.content-header {
+    border-bottom: 0;
+    /* Bottom border */
+    margin-bottom: 0;
+    /* Remove bottom margin */
+}
+
+#simul-container {
+    position: relative;
+    /* Set position */
+    display: inline-block;
+    /* Set display */
+    line-height: 0;
+    /* Set line height */
+}
+
+#simul-image {
+    display: block;
+    /* Set display */
+    width: 100%;
+    /* Set max width */
+    height: auto;
+    /* Set height */
+}
+
+.table-container {
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+}
+
+mark {
+    background-color: #fff195;
+    /* Change this to your desired highlight color */
+    border-radius: 5px;
+    /* Add border radius */
+}

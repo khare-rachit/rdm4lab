@@ -1,0 +1,81 @@
+<!-- templates/registration/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+RDM4Lab My Profile
+{% endblock %}
+
+{% block content_title %}
+My Profile
+{% endblock %}
+
+{% block content_description %}
+Here you can view details of your profile.
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+    {{ message }}
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="col-md-6">
+  <div class="table-responsive">
+    <table class="table table-user-information">
+      <tbody>
+        <tr>
+          <td>
+            <strong>Username</strong>
+          </td>
+          <td class="text-primary">{{ user.username }}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Role</strong>
+          </td>
+          <td class="text-primary">{{ user.role }}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>First Name</strong>
+          </td>
+          <td class="text-primary">{{ user.first_name }}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Last Name</strong>
+          </td>
+          <td class="text-primary">{{ user.last_name }}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Email</strong>
+          </td>
+          <td class="text-primary">{{ user.email }}</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Course</strong>
+          </td>
+          <td class="text-primary">{{ user.course }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <a href="{% url 'update-profile' %}" class="btn btn-primary">Edit Profile</a>
+  <br />
+</div>
+{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item">
+  <a href="{% url 'profile' %}">
+    <span>Profile</span>
+  </a>
+</li>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!-- main/templates/main/my-experiments.html -->
+{% extends 'base.html' %}
+
+<!-- Title of the page -->
+{% block title %}
+My Experiments
+{% endblock %}
+
+<!-- Content title -->
+{% block content_title %}
+My Experiments
+{% endblock %}
+
+<!-- Content description -->
+{% block content_description %}
+Here is a list of experiments that are scheduled for you.
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<!-- Load custom CSS files from main app -->
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}" />
+
+<!-- load custom tags -->
+{% load custom_tags %}
+
+<div class="table-responsive pt-3 col-md-6">
+  <table class="table table-experiment-information">
+    <thead>
+      <tr>
+        <th>Experiment</th>
+        <th>Scheduled on</th>
+        <th>Report due on</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for experiment in my_experiments %}
+      <tr>
+        <td>
+          <a href="{% url 'my-experiments-id' experiment.id %}">{{ experiment.id }}</a>
+        </td>
+        <td>{{ experiment.experiment_date|date:"N j, Y" }}</td>
+        <td>
+          {{ experiment.report_due_date|date:"N j, Y" }}
+          <!-- If the report is due soon, display a message -->
+          {% if experiment.warning %}
+          <div style="color: red; font-size: 10px;">{{ experiment.warning_msg }}</div>
+          {% endif %}
+        </td>
+      </tr>
+      <!-- If there are no experiments, display a message -->
+      {% empty %}
+      <tr>
+        <td colspan="3">No experiments found.</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+<!-- Breadcrumbs -->
+{% block breadcrumbs %}
+<!-- Link to the my experiments page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'my-experiments' %}">
+    <span>My Experiments</span>
+  </a>
+</li>
+{% endblock %}

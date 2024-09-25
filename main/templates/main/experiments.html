@@ -1,0 +1,63 @@
+<!-- main/templates/main/experiments.html -->
+{% extends 'base.html' %}
+
+<!-- Set the title of the page -->
+{% block title %}
+RDM4Lab Experiments
+{% endblock %}
+
+<!-- Set the content title and description -->
+{% block content_title %}
+All Experiments
+{% endblock %}
+
+{% block content_description %}
+Here is a list of experiments currently offered in the course.
+{% endblock %}
+
+
+{% block content %}
+{% load static %}
+<!-- Load custom CSS files from main app -->
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}" />
+
+<div class="table-responsive pt-3 col-md-9">
+  <!-- Experiments Table -->
+  <table class="table table-experiment-information">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loop through the experiment_list and display them in a table -->
+      {% for experiment in experiment_list %}
+      <tr>
+        <td>
+          <!-- Link to the experiment detail page -->
+          <a href="{% url 'experiments-id' experiment.id %}">{{ experiment.id }}</a>
+        </td>
+        <!-- Display the experiment name -->
+        <td>{{ experiment.name }}</td>
+      </tr>
+      <!-- If there are no experiments, display a message -->
+      {% empty %}
+      <tr>
+        <td colspan="2">No experiments found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+<!-- Breadcrumbs -->
+{% block breadcrumbs %}
+<!-- Link to the experiments page -->
+<li class="breadcrumb-item">
+  <a href="{% url 'experiments' %}">
+    <span>Experiments</span>
+  </a>
+</li>
+{% endblock %}

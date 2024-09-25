@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+
+{% comment %}
+Template file: ...G3/G3-data-analysis.html
+Description: This template is used to display the analyzed data for experiment.
+Author: Rachit Khare
+(c) 2024, RDM4Lab - all rights reserved
+{% endcomment %}
+
+{% block title %}
+RDM4Lab | G3 | Data Analysis
+{% endblock %}
+
+{% block content_title %}
+Data Analysis
+{% endblock %}
+
+{% block content_description %}
+<p>Here you can view the automated data analysis for experiment G3.</p>
+<p><a href="{% url 'G3:G3-data' %}">Click here</a> to 
+    go to data management page for your data.</p>
+<hr>
+{# load custom tags and static files #}
+{% load custom_tags %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'G3/css/G3.css' %}" />
+<script type="text/javascript" src="{% static 'G3/js/G3.js' %}"></script>
+{% load humanize %}
+
+<!-- Tabs for different panes -->
+<div class="container-fluid tab-container p-0 pb-3">
+    <ul class="nav nav-tabs" id="analysisTabs" role="tablist">
+        <!-- Processed Data Tab -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pd-tab" data-bs-toggle="tab" data-bs-target="#pd-pane" type="button"
+                role="tab">Conversion</button>
+        </li>
+        <!-- Rate Data Tab -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="rd-tab" data-bs-toggle="tab" data-bs-target="#rd-pane" type="button"
+                role="tab">Rate</button>
+        </li>
+        <!-- Activation Energy Tab -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ea-tab" data-bs-toggle="tab" data-bs-target="#ea-pane" type="button"
+                role="tab">Activation Energy</button>
+        </li>
+        <!-- Reaction Order Tab -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ro-tab" data-bs-toggle="tab" data-bs-target="#ro-pane" type="button"
+                role="tab">Reaction Order</button>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Tab Contents -->
+<div class="tab-content" id="analysisTabContent">
+    <!-- Proccesed Data Pane -->
+    <div class="tab-pane fade show active" id="pd-pane" role="tabpanel" tabindex="0">
+        {% if not proc_dataset %}
+        <div class="alert alert-danger" role="alert">
+            NOTE: Automated data analysis not possible.
+        </div>
+        {% else %}
+        <div class="card card-body">
+            <table id="data-table" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        {% with labels=proc_dataset|get_at_index:0|dict_key:"proc_data" %}
+                        {% for label in labels %}
+                        <th>{{ label }}</th>
+                        {% endfor %}
+                        {% endwith %}
+                        <th>Enable/Disable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for datapoint in proc_dataset %}
+                <tr>
+                    <td>
+                        {% if datapoint|dict_key:"is_simulated" %}
+                        <mark>
+                        {% endif %}
+                        <a href="{% url 'G3:G3-data-edit' datapoint|dict_key:"id" %}">
+                        {{ datapoint|dict_key:"id" }}</a>
+                        {% if datapoint|dict_key:"is_simulated" %}
+                        </mark>
+                        {% endif %}
+                    </td>
+                    {% with labels=datapoint|dict_key:"proc_data" %}
+                    {% for item in labels %}
+                    <td>{{ labels|dict_key:item|intcomma }}</td>
+                    {% endfor %}
+                    <td>
+                        <a href={% url 'G3:G3-toggle-active' datapoint|dict_key:"id" %}>
+                        {% if datapoint|dict_key:"is_active" %}
+                        <span class="badge bg-success">Enabled</span>
+                        {% else %}
+                        <span class="badge bg-danger">Disabled</span>
+                        {% endif %}
+                        </a>
+                    </td>
+                    {% endwith %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <p><mark>Simulated</mark> data point</p>
+        </div>
+        {% endif %}
+    </div>
+    <!-- Rates Pane -->
+    <div class="tab-pane fade show" id="rd-pane" role="tabpanel" tabindex="0">
+        {% if not rate_dataset %}
+        <div class="alert alert-danger" role="alert">
+            NOTE: Automated data analysis not possible.
+        </div>
+        {% else %}
+        <div class="card card-body">
+            {% for item in rate_dataset %}
+            <div class="card card-body">
+                <div class="row">
+                    <h5 class="card-title">Rate Dataset # {{ item|dict_key:"id" }}</h5>
+                    <div class="col-sm-6">
+                        <div class="table">
+                            <table class="table">
+                                <tbody>
+                                    {% with metadata=item|dict_key:"metadata"%}
+                                    {% for key, value in metadata.items %}
+                                    <tr>
+                                        <td><strong>{{ key }}</strong></td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    <tr>
+                                        <td><strong>data points</strong></td>
+                                        <td>
+                                        {% for id in item|dict_key:"ref_ids" %}
+                                        {% if item|dict_key:"is_simulated"|get_at_index:forloop.counter0 %}
+                                        <mark>
+                                        {% endif %}
+                                        <a href="{% url 'G3:G3-data-edit' id %}">{{ id }}</a>
+                                        {% if item|dict_key:"is_simulated"|get_at_index:forloop.counter0 %}
+                                        </mark>
+                                        {% endif %}
+                                        {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="chart_rates_{{ forloop.counter }}" class="col-sm-6 plotly-chart">
+                    </div>
+                    {% with item|dict_key:"plots"|safe as plotdata %}
+                    <script>
+                        var plotData = {{ plotdata }}
+                        var layout = {
+                            xaxis: { title: 'tau [mol / kg * s]' },
+                            yaxis: { title: 'Conversion' },
+                            margin: { t: 10 },
+                            autosize: true,
+                        }
+                        Plotly.newPlot("chart_rates_{{ forloop.counter }}", plotData, layout)
+                    </script>
+                    {% endwith %}
+                </div>
+                {% if item|dict_key:"error" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ item|dict_key:"error" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <!-- Ea Pane -->
+    <div class="tab-pane fade show" id="ea-pane" role="tabpanel" tabindex="0">
+        {% if not ea_dataset %}
+        <div class="alert alert-danger" role="alert">
+            NOTE: Automated data analysis not possible.
+        </div>
+        {% else %}
+        <div class="card card-body">
+            {% for item in ea_dataset %}
+            <div class="card card-body">
+                <h5 class="card-title">Ea Dataset # {{ forloop.counter }}</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="table">
+                            <table class="table">
+                                <tbody>
+                                    {% with metadata=item|dict_key:"metadata"%}
+                                    {% for key, value in metadata.items %}
+                                    <tr>
+                                        <td><strong>{{ key }}</strong></td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    <tr>
+                                        <td><strong>Rate Datasets #</strong></td>
+                                        <td>
+                                        {% for id in item|dict_key:"ref_ids" %}
+                                        {{ id }}
+                                        {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="chart_ea_{{ forloop.counter }}" class="col-sm-6 plotly-chart">
+                    </div>
+                    {% with plotdata=item|dict_key:'plots'|safe %}
+                    <script>
+                        var plotData = {{ plotdata }}
+                        var layout = {
+                            xaxis: { title: '1/T [1/K]' },
+                            yaxis: { title: 'ln(r/[mol/(kg*s)])' },
+                            margin: { t: 10 },
+                            autosize: true,
+                        }
+                        Plotly.newPlot("chart_ea_{{ forloop.counter }}", plotData, layout)
+                    </script>
+                    {% endwith %}
+                </div>
+                {% if item|dict_key:"error" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ item|dict_key:"error" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <!-- Reaction Orders Pane -->
+    <div class="tab-pane fade show" id="ro-pane" role="tabpanel" tabindex="0">
+        {% if not ro_dataset %}
+        <div class="alert alert-danger" role="alert">
+            NOTE: Automated data analysis not possible.
+        </div>
+        {% else %}
+        <div class="card card-body">
+            {% for item in ro_dataset %}
+            <div class="card card-body">
+                <h5 class="card-title">RO Dataset # {{ forloop.counter }}</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="table">
+                            <table class="table">
+                                <tbody>
+                                    {% with metadata=item|dict_key:"metadata"%}
+                                    {% for key, value in metadata.items %}
+                                    <tr>
+                                        <td><strong>{{ key }}</strong></td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endwith %}
+                                    <tr>
+                                        <td><strong>Rate Datasets #</strong></td>
+                                        <td>
+                                        {% for id in item|dict_key:"ref_ids" %}
+                                        {{ id }}
+                                        {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="chart_ro_{{ forloop.counter }}" class="col-sm-6 plotly-chart">
+                    </div>
+                    {% with plotdata=item|dict_key:'plots'|safe %}
+                    <script>
+                        var plotData = {{ plotdata }}
+                        var layout = {
+                            xaxis: { title: 'log(p/[bar])' },
+                            yaxis: { title: 'log(r/[mol/(kg*s)])' },
+                            margin: { t: 10 },
+                            autosize: true,
+                        }
+                        Plotly.newPlot("chart_ro_{{ forloop.counter }}", plotData, layout)
+                    </script>
+                    {% endwith %}
+                </div>
+                {% if item|dict_key:"error" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ item|dict_key:"error" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+<hr>
+<div>
+    <a href="{% url 'G3:G3-data-simulation' %}">Click here</a> to 
+    simulate additional data for this exepriment.
+</div>
+{% endblock %}
+
+{% block breadcrumbs %}
+<!-- link to my-experiments page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments' %}">
+        <span>My Experiments</span>
+    </a>
+</li>
+<!-- link to Experiment main page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments-id' 'G3' %}">
+        <span>G3</span>
+    </a>
+</li>
+<!-- link to this page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'G3:G3-data' %}">
+        <span>Data Management</span>
+    </a>
+</li>
+<!-- link to this page -->
+<li class="breadcrumb-item">
+    <a href="{% url 'G3:G3-data-analysis' %}">
+        <span>Data Analysis</span>
+    </a>
+</li>
+{% endblock %}

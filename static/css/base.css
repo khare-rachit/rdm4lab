@@ -1,0 +1,283 @@
+/*-----------------global-styles-----------------*/
+
+html,
+body {
+  height: 100%;
+  /* Full viewport height */
+  margin: 0;
+  /* Remove default margin */
+}
+
+body {
+  min-height: 100vh;
+  /* Full viewport height */
+  display: flex;
+  /* Make the body a flex container */
+  flex-direction: column;
+  /* Stack flex items vertically */
+}
+
+.main-container {
+  height: 100vh;
+  /* Full viewport height */
+  overflow: hidden;
+  /* Hide overflow */
+}
+
+/* RDM4Lab logo in the sidebar */
+.rdm4lab-logo {
+  height: 50px;
+  /* Fixed height */
+}
+
+/*------------------sidebar-styles-----------------*/
+
+/*------------------sidebar-header-----------------*/
+/* Fixed header within the sidebar */
+.sidebar-header {
+  position: sticky;
+  /* Fixed position */
+  top: 0;
+  /* Stick to the top of the offcanvas */
+  border-bottom: 1px solid lightgray;
+  /* Bottom border */
+}
+
+/* Ensures that the offcanvas body is scrollable if the content overflows */
+.sidebar-body {
+  overflow-y: auto;
+  /* Enable vertical scrolling */
+}
+
+/* Main Sideabr */
+#mainSidebar {
+  border-right: 1px solid #e5e5e5;
+  /* Right border */
+}
+
+/* Login button in the sidebar */
+.sidebar-login-button {
+  border-radius: 5px;
+  /* Rounded corners */
+  background: #f8f9fa;
+  /* Background color */
+  color: rgba(0, 101, 189, 1.0);
+  /* Text color */
+  border: 1px solid rgba(0, 101, 189, 1.0);
+  /* Border */
+  text-align: center;
+  /* Center text */
+}
+
+/* Hover effect */
+.sidebar-login-button:hover {
+  background: rgba(0, 101, 189, 1.0);
+  /* Darker background color */
+  color: #fff;
+  /* White text color */
+}
+
+/* Sidebar user information when logged in */
+#mainSidebar .user-info {
+  padding-left: 25px;
+}
+
+/* Sidebar user role e.g. ADMIN */
+#mainSidebar .user-info .user-role {
+  display: block;
+  /* Display as block element */
+  font-size: 12px;
+  /* Smaller font size */
+}
+
+/*---------------sidebar-navigation--------------*/
+
+/* Sidebar navigation list */
+.sidebarNav .nav-link {
+  color: #000;
+  /* Text color */
+  text-decoration: none;
+  /* Remove underline */
+  width: 100%;
+  /* Full width */
+  display: block;
+  /* Display as block element */
+  border-radius: 5px;
+  /* Rounded corners */
+  padding: 8px 5px;
+  /* Padding left and right */
+}
+
+/* Active navigation item */
+.nav-pills .nav-link.active {
+  background: rgba(0, 101, 189, 0.2);
+  /* Background color */
+  color: rgba(0, 101, 189);
+  /* Text color */
+}
+
+/* Hover effect */
+.nav-pills .nav-link:hover {
+  background: rgba(0, 101, 189, 0.2);
+  /* Background color */
+  color: rgba(0, 101, 189);
+  /* Text color */
+}
+
+/* Sidebar navigation icons */
+.sidebarNav li a i {
+  width: 25px;
+  /* Fixed width */
+  text-align: center;
+  /* Center text */
+}
+
+/* Disabled navigation item */
+.sidebarNav li a.disabled {
+  pointer-events: none;
+  /* Disable pointer events */
+  color: grey;
+  /* Text color */
+}
+
+/*------------------sidebar-footer-----------------*/
+
+/* Sidebar footer */
+.sidebar-footer {
+  position: relative;
+  /* Relative position */
+  width: 100%;
+  /* Full width */
+  margin-top: auto;
+  /* Push to the bottom */
+  margin-bottom: 0px;
+  /* Remove bottom margin */
+  border-top: 1px solid lightgray;
+}
+
+.sidebar-footer small {
+  font-size: 12px;
+}
+
+/*------------------main-content------------------*/
+.main-panel {
+  display: flex;
+  /* Make the main panel a flex container */
+  flex-direction: column;
+  /* Stack flex items vertically */
+  height: 100vh;
+  /* Full viewport height */
+}
+
+/*------------------main-header-------------------*/
+/* Header in the main panel on small screens */
+.main-header {
+  position: sticky;
+  /* Fixed position */
+  top: 0;
+  /* Stick to the top of the viewport */
+  border-bottom: 1px solid lightgray;
+  /* Bottom border */
+  flex-shrink: 0;
+  /* Do not shrink */
+}
+
+.main-header .toggle-icon {
+  font-size: 20px;
+  /* Larger font size */
+  border-radius: 5px;
+  /* Rounded corners */
+}
+
+/*-------------navigation panel--------------*/
+/* Breadcrumbs navigation */
+.breadcrumb-panel {
+  border-bottom: 1px solid lightgray;
+  /* Bottom border */
+  flex-shrink: 0;
+  /* Do not shrink */
+}
+
+#breadcrumbPanel .nav {
+  padding: 0;
+  /* Remove padding */
+}
+
+/* Breadcrumbs navigation list */
+.breadcrumb-item>a {
+  text-decoration: None;
+  /* Remove underline */
+}
+
+.breadcrumb-item>a:hover {
+  text-decoration: underline;
+  /* Add underline on hover */
+}
+
+/*------------------content-header-----------------*/
+/* Content header */
+.content-header {
+  padding: 10px 0;
+  /* Padding top and bottom */
+  margin: 0;
+  /* Remove default margin */
+  margin-bottom: 10px;
+  /* Add Bottom margin */
+  flex-shrink: 0;
+  /* Do not shrink */
+}
+
+/* Content header heading */
+.content-header h3 {
+  padding-bottom: 2px;
+  /* Padding bottom */
+  margin: 0;
+  /* Remove default margin */
+  font-size: 28px;
+  /* Larger font size */
+}
+
+/* Content header paragraph */
+.content-header p {
+  font-size: 16px;
+  /* Smaller font size */
+  margin: 0;
+  /* Remove default margin */
+}
+
+/*------------------content-panel-----------------*/
+/* content panel */
+.content-panel {
+  display: flex;
+  /* Make the main panel a flex container */
+  flex-direction: column;
+  /* Stack flex items vertically */
+  height: 100vh;
+  /* Full viewport height */
+  overflow-y: auto;
+  /* Enables vertical scrolling if content overflows */
+  flex-grow: 1;
+  /* Grow to fill the remaining space */
+}
+
+/*------------------main-footer-------------------*/
+/* Main panel footer */
+.main-footer {
+  position: relative;
+  /* Relative position */
+  width: 100%;
+  /* Full width */
+  margin-top: auto;
+  /* Push to the bottom */
+  margin-bottom: 0px;
+  /* Remove bottom margin */
+  border-top: 1px solid lightgray;
+  /* Top border */
+  flex-shrink: 0;
+  /* Do not shrink */
+}
+
+.main-footer small {
+  font-size: 12px;
+  /* Smaller font size */
+}

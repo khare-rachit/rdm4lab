@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% comment %}
+File location: ...G1/G1-data.html
+Description: This template is used to display the data for G1 experiment.
+Author: Rachit Khare
+(c) 2024, RDM4Lab - all rights reserved
+{% endcomment %}
+
+{% block title %}
+RDM4Lab | G1 | Data
+{% endblock %}
+
+{% block content_title %}
+Data Management
+{% endblock %}
+
+{% block content_description %}
+<p>Here you can manage the data for this experiment.</p>
+<p><a href="{% url 'G1:G1-data-analysis' %}">Click here</a> to 
+    access automated data analysis for your data.</p>
+<hr>
+{# load custom tags and static files #}
+{% load custom_tags %}
+{% load humanize %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'G1/css/G1.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Table to display data -->
+{% if dataset is None %}
+<div class="alert alert-danger" role="alert">
+    No data available for this experiment.
+</div>
+{% else %}
+<div class="table-container card card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                {% with labels=dataset|get_at_index:0|dict_key:"raw_data" %}
+                {% for label in labels %}
+                <th>{{ label }}</th>
+                {% endfor %}
+                {% endwith %}
+                <th>File</th>
+                <th>Enable/Disable</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for datapoint in dataset %}
+            <tr>
+                <td>
+                    <a href="{% url 'G1:G1-data-edit' datapoint|dict_key:"id" %}">
+                    {{ datapoint|dict_key:"id" }}</a>
+                </td>
+                {% with labels=datapoint|dict_key:"raw_data" %}
+                {% for item in labels %}
+                <td>{{ labels|dict_key:item|intcomma }}</td>
+                {% endfor %}
+                {% if datapoint|dict_key:"file" %}
+                <td><a href="{{ datapoint|dict_key:"file" }}">Download File</a></td>
+                {% else %}
+                <td>No file</td>
+                {% endif %}
+                <td>
+                    <a href={% url 'G1:G1-toggle-active' datapoint|dict_key:"id" %}>
+                    {% if datapoint|dict_key:"is_active" %}
+                    <span class="badge bg-success">Enabled</span>
+                    {% else %}
+                    <span class="badge bg-danger">Disabled</span>
+                    {% endif %}
+                    </a>
+                </td>
+                {% endwith %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+<div class="text-center pt-2">
+    <a class="btn btn-outline-primary" href="{% url 'G1:G1-data-add' %}">Add Data</a>
+</div>
+<hr>
+{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments' %}">
+        <span>My Experiments</span>
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'my-experiments-id' 'G1' %}">
+        <span>G1</span>
+    </a>
+</li>
+<li class="breadcrumb-item">
+    <a href="{% url 'G1:G1-data' %}">
+        <span>Data Management</span>
+    </a>
+</li>
+{% endblock %}
