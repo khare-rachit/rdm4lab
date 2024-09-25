@@ -24,6 +24,7 @@ __pycache__/
 
 # Ignore log files
 *.log
+.DS_Store
 
 # Ignore environment variables file
 .env
